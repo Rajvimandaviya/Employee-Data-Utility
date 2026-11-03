@@ -1,0 +1,572 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Data Utility - Day 2</title>
+
+    <style>
+        /* Page ni design */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            color: #1e293b;
+        }
+
+        h1 {
+            text-align: center;
+            color: #1d4ed8;
+        }
+
+        h2 {
+            color: #1e40af;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px #00000012;
+        }
+
+        .card h3 {
+            margin-top: 0;
+            color: #475569;
+            font-size: 16px;
+        }
+
+        .card p {
+            font-size: 22px;
+            font-weight: bold;
+            color: #2563eb;
+            overflow-wrap: anywhere;
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: bold;
+        }
+
+        input, select, button {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        button {
+            background: #2563eb;
+            color: white;
+            cursor: pointer;
+            border: none;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        .reset {
+            background: #64748b;
+        }
+
+        .reset:hover {
+            background: #475569;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .section {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            box-shadow: 0 2px 8px #00000012;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 650px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        th {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        tr:hover {
+            background: #f8fafc;
+        }
+
+        .department-groups {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .group-card {
+            padding: 15px;
+            border: 1px solid #bfdbfe;
+            border-radius: 8px;
+            background: #eff6ff;
+        }
+
+        .group-card h3 {
+            margin-top: 0;
+            color: #1d4ed8;
+        }
+
+        .message {
+            text-align: center;
+            padding: 20px;
+            color: #64748b;
+        }
+
+        @media (max-width: 800px) {
+            .summary,
+            .controls,
+            .department-groups {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 550px) {
+            .summary,
+            .controls,
+            .department-groups {
+                grid-template-columns: 1fr;
+            }
+
+            body {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <h1>Employee Data Utility</h1>
+    <p style="text-align:center">
+        Day 2 Practical Assignment - JavaScript
+    </p>
+
+    <!-- Summary cards -->
+    <div class="summary">
+
+        <div class="card">
+            <h3>Total Employees</h3>
+            <p id="totalEmployees">0</p>
+        </div>
+
+        <div class="card">
+            <h3>Average Salary</h3>
+            <p id="averageSalary">₹0</p>
+        </div>
+
+        <div class="card">
+            <h3>Highest Paid Employee</h3>
+            <p id="highestEmployee">-</p>
+            <span id="highestSalary"></span>
+        </div>
+
+    </div>
+
+    <!-- Search, Filter ane Sort -->
+    <div class="section">
+        <h2>Search, Filter & Sort</h2>
+
+        <div class="controls">
+
+            <div>
+                <label for="search">Search Employee</label>
+                <input
+                    type="text"
+                    id="search"
+                    placeholder="Enter employee name..."
+                >
+            </div>
+
+            <div>
+                <label for="department">Filter by Department</label>
+                <select id="department">
+                    <option value="All">All Departments</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="salary">Filter by Salary</label>
+                <select id="salary">
+                    <option value="All">All Salaries</option>
+                    <option value="below30000">Below ₹30,000</option>
+                    <option value="30000to44999">₹30,000 - ₹44,999</option>
+                    <option value="45000to59999">₹45,000 - ₹59,999</option>
+                    <option value="60000plus">₹60,000 and above</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="sort">Sort By</label>
+                <select id="sort">
+                    <option value="id">Employee ID</option>
+                    <option value="nameAsc">Name A to Z</option>
+                    <option value="nameDesc">Name Z to A</option>
+                    <option value="salaryAsc">Salary Low to High</option>
+                    <option value="salaryDesc">Salary High to Low</option>
+                </select>
+            </div>
+
+        </div>
+
+        <div class="button-group">
+            <button type="button" id="apply">Apply Filters</button>
+            <button type="button" class="reset" id="reset">
+                Reset All
+            </button>
+        </div>
+    </div>
+
+    <!-- Employee table -->
+    <div class="section">
+        <h2>Employee List</h2>
+        <p id="resultCount">Showing 25 employees</p>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Department</th>
+                        <th>Job Title</th>
+                        <th>Salary</th>
+                    </tr>
+                </thead>
+
+                <tbody id="employeeTable"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Department grouping -->
+    <div class="section">
+        <h2>Group By Department</h2>
+        <div id="departmentGroups" class="department-groups"></div>
+    </div>
+
+</div>
+<script>
+    // 1. Array of 25 sample employees
+    const employees = [
+        {id: 1, name: "Raj Patel", department: "IT", role: "Developer", salary: 45000},
+        {id: 2, name: "Priya Shah", department: "HR", role: "HR Executive", salary: 32000},
+        {id: 3, name: "Amit Desai", department: "IT", role: "Backend Developer", salary: 60000},
+        {id: 4, name: "Neha Joshi", department: "Finance", role: "Accountant", salary: 38000},
+        {id: 5, name: "Karan Mehta", department: "Marketing", role: "Marketing Executive", salary: 35000},
+        {id: 6, name: "Riya Trivedi", department: "IT", role: "UI Designer", salary: 42000},
+        {id: 7, name: "Dev Parmar", department: "Sales", role: "Sales Executive", salary: 30000},
+        {id: 8, name: "Mira Patel", department: "HR", role: "Recruiter", salary: 34000},
+        {id: 9, name: "Jay Shah", department: "Finance", role: "Financial Analyst", salary: 52000},
+        {id: 10, name: "Anjali Desai", department: "Marketing", role: "Content Writer", salary: 36000},
+        {id: 11, name: "Dhruv Joshi", department: "IT", role: "Full Stack Developer", salary: 65000},
+        {id: 12, name: "Pooja Mehta", department: "Sales", role: "Sales Manager", salary: 58000},
+        {id: 13, name: "Nikhil Shah", department: "Operations", role: "Operations Executive", salary: 40000},
+        {id: 14, name: "Sneha Patel", department: "HR", role: "HR Manager", salary: 55000},
+        {id: 15, name: "Arjun Trivedi", department: "IT", role: "QA Engineer", salary: 47000},
+        {id: 16, name: "Isha Parmar", department: "Finance", role: "Finance Executive", salary: 33000},
+        {id: 17, name: "Manav Mehta", department: "Marketing", role: "SEO Specialist", salary: 44000},
+        {id: 18, name: "Kavya Joshi", department: "Operations", role: "Operations Manager", salary: 61000},
+        {id: 19, name: "Yash Desai", department: "Sales", role: "Sales Executive", salary: 39000},
+        {id: 20, name: "Tara Shah", department: "IT", role: "Product Manager", salary: 72000},
+        {id: 21, name: "Om Patel", department: "Finance", role: "Senior Accountant", salary: 49000},
+        {id: 22, name: "Diya Mehta", department: "Marketing", role: "Marketing Manager", salary: 59000},
+        {id: 23, name: "Parth Joshi", department: "Operations", role: "Support Engineer", salary: 31000},
+        {id: 24, name: "Aarohi Shah", department: "HR", role: "Training Coordinator", salary: 41000},
+        {id: 25, name: "Vivaan Patel", department: "Sales", role: "Regional Sales Manager", salary: 68000}
+    ];
+
+    // Salary ne Indian currency format ma batavva.
+    const money = amount =>
+        new Intl.NumberFormat("en-IN", {
+            style: "currency",
+            currency: "INR",
+            maximumFractionDigits: 0
+        }).format(amount);
+
+    // 2. Department dropdown ma unique departments add karva.
+    function loadDepartments() {
+        const departments = [
+            ...new Set(employees.map(employee => employee.department))
+        ].sort();
+
+        const dropdown = document.getElementById("department");
+
+        departments.forEach(department => {
+            const option = document.createElement("option");
+            option.value = department;
+            option.textContent = department;
+            dropdown.appendChild(option);
+        });
+    }
+
+    // 3. Average salary calculate karva reduce() vaparyu che.
+    function calculateAverageSalary() {
+        const total = employees.reduce(
+            (sum, employee) => sum + employee.salary, 0
+        );
+
+        return employees.length ? total / employees.length : 0;
+    }
+
+    // 4. Highest salary dharavto employee find karvo.
+    function findHighestPaidEmployee() {
+        if (employees.length === 0) return null;
+
+        return employees.reduce((highest, employee) =>
+            employee.salary > highest.salary ? employee : highest
+        );
+    }
+
+    // Summary cards ma data batavvo.
+    function showSummary() {
+        document.getElementById("totalEmployees").textContent =
+            employees.length;
+
+        document.getElementById("averageSalary").textContent =
+            money(calculateAverageSalary());
+
+        const highest = findHighestPaidEmployee();
+
+        document.getElementById("highestEmployee").textContent =
+            highest ? highest.name : "None";
+
+        document.getElementById("highestSalary").textContent =
+            highest ? money(highest.salary) : "";
+    }
+
+    // 5. Search ane Filter apply karva.
+    function getFilteredEmployees() {
+        const searchText =
+            document.getElementById("search").value.trim().toLowerCase();
+
+        const selectedDepartment =
+            document.getElementById("department").value;
+
+        const selectedSalary =
+            document.getElementById("salary").value;
+
+        let result = employees.filter(employee => {
+            // Name, department ke job title ma search karvu.
+            const matchesSearch =
+                employee.name.toLowerCase().includes(searchText) ||
+                employee.department.toLowerCase().includes(searchText) ||
+                employee.role.toLowerCase().includes(searchText);
+
+            // Selected department sathe match check karvu.
+            const matchesDepartment =
+                selectedDepartment === "All" ||
+                employee.department === selectedDepartment;
+
+            // Salary range check karvi.
+            let matchesSalary = true;
+
+            if (selectedSalary === "below30000") {
+                matchesSalary = employee.salary < 30000;
+            } else if (selectedSalary === "30000to44999") {
+                matchesSalary =
+                    employee.salary >= 30000 &&
+                    employee.salary <= 44999;
+            } else if (selectedSalary === "45000to59999") {
+                matchesSalary =
+                    employee.salary >= 45000 &&
+                    employee.salary <= 59999;
+            } else if (selectedSalary === "60000plus") {
+                matchesSalary = employee.salary >= 60000;
+            }
+
+            return matchesSearch && matchesDepartment && matchesSalary;
+        });
+
+        // 6. Sort by name athva salary.
+        const sortValue = document.getElementById("sort").value;
+
+        result = [...result].sort((a, b) => {
+            switch (sortValue) {
+                case "nameAsc":
+                    return a.name.localeCompare(b.name);
+
+                case "nameDesc":
+                    return b.name.localeCompare(a.name);
+
+                case "salaryAsc":
+                    return a.salary - b.salary;
+
+                case "salaryDesc":
+                    return b.salary - a.salary;
+
+                default:
+                    return a.id - b.id;
+            }
+        });
+
+        return result;
+    }
+
+    // Table ma employee data render karvo.
+    function renderTable(list) {
+        const table = document.getElementById("employeeTable");
+        table.innerHTML = "";
+
+        document.getElementById("resultCount").textContent =
+            `Showing ${list.length} of ${employees.length} employees`;
+
+        if (list.length === 0) {
+            const row = document.createElement("tr");
+            const cell = document.createElement("td");
+
+            cell.colSpan = 5;
+            cell.className = "message";
+            cell.textContent = "No employees found. Try different filters.";
+
+            row.appendChild(cell);
+            table.appendChild(row);
+            return;
+        }
+
+        list.forEach(employee => {
+            const row = document.createElement("tr");
+
+            // textContent vaparta data HTML tarike execute thato nathi.
+            [
+                employee.id,
+                employee.name,
+                employee.department,
+                employee.role,
+                money(employee.salary)
+            ].forEach(value => {
+                const cell = document.createElement("td");
+                cell.textContent = value;
+                row.appendChild(cell);
+            });
+
+            table.appendChild(row);
+        });
+    }
+
+    // 7. Group By Department using reduce().
+    function groupByDepartment() {
+        return employees.reduce((groups, employee) => {
+            const department = employee.department;
+
+            if (!groups[department]) {
+                groups[department] = [];
+            }
+
+            groups[department].push(employee);
+            return groups;
+        }, {});
+    }
+
+    // Department wise alag cards batavva.
+    function renderGroups() {
+        const groups = groupByDepartment();
+        const container = document.getElementById("departmentGroups");
+
+        container.innerHTML = "";
+
+        Object.keys(groups).sort().forEach(department => {
+            const members = groups[department];
+
+            const card = document.createElement("div");
+            card.className = "group-card";
+
+            const heading = document.createElement("h3");
+            heading.textContent =
+                `${department} (${members.length} employees)`;
+
+            const names = document.createElement("p");
+            names.textContent =
+                members.map(employee => employee.name).join(", ");
+
+            card.append(heading, names);
+            container.appendChild(card);
+        });
+    }
+
+    // Search, filter ane sort badlay tyare table refresh karvi.
+    function updateTable() {
+        renderTable(getFilteredEmployees());
+    }
+
+    // Apply button click.
+    document.getElementById("apply").addEventListener("click", updateTable);
+
+    // Search karta j result update thay.
+    document.getElementById("search").addEventListener("input", updateTable);
+
+    // Dropdown change thata j result update thay.
+    document.getElementById("department").addEventListener("change", updateTable);
+    document.getElementById("salary").addEventListener("change", updateTable);
+    document.getElementById("sort").addEventListener("change", updateTable);
+
+    // 8. Reset All: badha controls default par mukva.
+    document.getElementById("reset").addEventListener("click", function () {
+        document.getElementById("search").value = "";
+        document.getElementById("department").value = "All";
+        document.getElementById("salary").value = "All";
+        document.getElementById("sort").value = "id";
+
+        updateTable();
+    });
+
+    // Page load thay tyare badha functions chalavva.
+    loadDepartments();
+    showSummary();
+    renderGroups();
+    updateTable();
+</script>
+</body>
+</html>

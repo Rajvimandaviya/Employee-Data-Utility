@@ -1,0 +1,1834 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Employee Data Utility</title>
+
+<style>
+
+/* =====================================
+   1. BASIC DESIGN
+   
+===================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: #f5f6fc;
+    color: #252d45;
+}
+
+.container {
+    width: 94%;
+    max-width: 1380px;
+    margin: auto;
+}
+
+
+/* =====================================
+   2. NAVIGATION BAR
+===================================== */
+
+.navbar {
+    background: #ffffff;
+    border-bottom: 1px solid #e9eaf2;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.nav-inner {
+    min-height: 72px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    font-size: 19px;
+    font-weight: 800;
+    color: #293b80;
+}
+
+.logo {
+    width: 42px;
+    height: 42px;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(135deg, #4d55ce, #7661e8);
+    color: white;
+    border-radius: 12px;
+    font-size: 21px;
+}
+
+.nav-links {
+    display: flex;
+    gap: 7px;
+    flex-wrap: wrap;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #68718c;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 10px 14px;
+    border-radius: 9px;
+    transition: 0.2s;
+}
+
+.nav-links a:hover {
+    background: #f0efff;
+    color: #5548bd;
+}
+
+
+/* =====================================
+   3. HOME / HERO SECTION
+===================================== */
+
+.hero {
+    margin: 25px 0 22px;
+    padding: 30px 34px;
+    border-radius: 17px;
+    color: white;
+
+    background: linear-gradient(
+        110deg,
+        #283b83,
+        #4d51b9,
+        #6655cf
+    );
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+
+    box-shadow: 0 7px 20px rgba(56, 62, 145, 0.15);
+}
+
+.hero-tag {
+    display: inline-block;
+    background: #ffffff20;
+    border: 1px solid #ffffff35;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+    margin-bottom: 13px;
+}
+
+.hero h1 {
+    font-size: clamp(25px, 3vw, 34px);
+    margin-bottom: 9px;
+}
+
+.hero p {
+    font-size: 13px;
+    line-height: 1.7;
+    color: #e5e7ff;
+    max-width: 650px;
+}
+
+.hero-right {
+    text-align: center;
+    min-width: 100px;
+}
+
+.hero-icon {
+    font-size: 51px;
+    background: #ffffff20;
+    width: 82px;
+    height: 82px;
+    display: grid;
+    place-items: center;
+    border-radius: 19px;
+    margin: auto;
+}
+
+.hero-right p {
+    font-size: 11px;
+    margin-top: 8px;
+}
+
+
+/* =====================================
+   4. SECTION HEADING
+===================================== */
+
+.section-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 26px 0 14px;
+    gap: 10px;
+}
+
+.section-heading h2 {
+    font-size: 18px;
+    color: #29365e;
+}
+
+.section-heading p {
+    font-size: 12px;
+    color: #8590aa;
+    margin-top: 4px;
+}
+
+
+/* =====================================
+   5. SUMMARY CARDS
+===================================== */
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+}
+
+.stat-card {
+    background: white;
+    border: 1px solid #e9eaf3;
+    border-radius: 14px;
+    padding: 18px;
+    display: flex;
+    gap: 13px;
+    align-items: center;
+    box-shadow: 0 3px 12px rgba(35, 45, 85, 0.035);
+    transition: 0.25s;
+    min-width: 0;
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 7px 19px rgba(35, 45, 85, 0.09);
+}
+
+.stat-icon {
+    width: 46px;
+    height: 46px;
+    min-width: 46px;
+    display: grid;
+    place-items: center;
+    border-radius: 12px;
+    font-size: 22px;
+}
+
+.blue-icon {
+    background: #edf0ff;
+}
+
+.green-icon {
+    background: #e6f7ed;
+}
+
+.orange-icon {
+    background: #fff2df;
+}
+
+.purple-icon {
+    background: #f1ebff;
+}
+
+.stat-card h3 {
+    color: #848ba2;
+    font-size: 11px;
+    margin-bottom: 7px;
+}
+
+.stat-number {
+    color: #35458f;
+    font-size: 22px;
+    font-weight: 800;
+    overflow-wrap: anywhere;
+}
+
+.highest-number {
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+
+/* =====================================
+   6. MAIN PANEL DESIGN
+===================================== */
+
+.panel {
+    background: white;
+    border: 1px solid #e8eaf2;
+    border-radius: 15px;
+    margin-bottom: 22px;
+    box-shadow: 0 3px 13px rgba(35, 45, 85, 0.04);
+    overflow: hidden;
+}
+
+.panel-heading {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 20px;
+    border-bottom: 1px solid #eceef5;
+    background: #ffffff;
+}
+
+.panel-icon {
+    width: 34px;
+    height: 34px;
+    display: grid;
+    place-items: center;
+    background: #efedff;
+    border-radius: 9px;
+    font-size: 17px;
+}
+
+.panel-heading h2 {
+    font-size: 16px;
+    color: #303b68;
+}
+
+.panel-content {
+    padding: 20px;
+}
+
+
+/* =====================================
+   7. SEARCH AND FILTER FIELDS
+===================================== */
+
+.filter-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+}
+
+.field {
+    min-width: 0;
+}
+
+.field label {
+    display: block;
+    font-size: 12px;
+    color: #475273;
+    font-weight: 750;
+    margin-bottom: 8px;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #e0e3ee;
+    background: #fafbfe;
+    border-radius: 9px;
+    font-size: 13px;
+    color: #303952;
+    outline: none;
+    transition: 0.2s;
+}
+
+input:focus,
+select:focus {
+    border-color: #7162d8;
+    background: #ffffff;
+    box-shadow: 0 0 0 3px #efedff;
+}
+
+.salary-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+    margin-top: 17px;
+}
+
+.button-row {
+    display: flex;
+    gap: 11px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+button {
+    border: none;
+    padding: 11px 19px;
+    border-radius: 9px;
+    font-size: 13px;
+    font-weight: 750;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+button:hover {
+    transform: translateY(-2px);
+}
+
+.apply-btn {
+    background: #514cbe;
+    color: white;
+    box-shadow: 0 4px 10px #514cbe30;
+}
+
+.apply-btn:hover {
+    background: #403b9f;
+}
+
+.reset-btn {
+    background: #fff0f1;
+    color: #cf4054;
+    border: 1px solid #ffdcdf;
+}
+
+.reset-btn:hover {
+    background: #ffe5e8;
+}
+
+
+/* =====================================
+   8. STATUS MESSAGE
+===================================== */
+
+.message {
+    padding: 13px 16px;
+    margin-bottom: 18px;
+    border-radius: 9px;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.success {
+    background: #eaf8ef;
+    color: #24804c;
+    border-left: 4px solid #38a66c;
+}
+
+.warning {
+    background: #fff4e4;
+    color: #a36a13;
+    border-left: 4px solid #e7a83d;
+}
+
+
+/* =====================================
+   9. EMPLOYEE TABLE
+===================================== */
+
+.result-count {
+    margin-bottom: 14px;
+    font-size: 12px;
+    color: #78819b;
+    font-weight: 750;
+}
+
+.table-container {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    min-width: 650px;
+    border-collapse: collapse;
+}
+
+th {
+    background: #f1f2fa;
+    color: #465287;
+    font-size: 12px;
+    font-weight: 800;
+    text-align: left;
+    padding: 14px;
+    white-space: nowrap;
+}
+
+td {
+    padding: 13px 14px;
+    border-bottom: 1px solid #edf0f5;
+    font-size: 13px;
+}
+
+tbody tr:hover {
+    background: #f8f8ff;
+}
+
+.employee-id {
+    display: inline-block;
+    background: #eef0ff;
+    color: #4d51ad;
+    font-size: 11px;
+    font-weight: 800;
+    padding: 5px 9px;
+    border-radius: 6px;
+}
+
+.employee-name {
+    color: #35405f;
+    font-weight: 750;
+}
+
+.dept-badge {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 750;
+    white-space: nowrap;
+}
+
+.dept-IT {
+    background: #e9f0ff;
+    color: #3868bd;
+}
+
+.dept-HR {
+    background: #e5f7eb;
+    color: #298451;
+}
+
+.dept-Finance {
+    background: #fff3df;
+    color: #a87823;
+}
+
+.dept-Marketing {
+    background: #f2eaff;
+    color: #8654b9;
+}
+
+.dept-Sales {
+    background: #ffebef;
+    color: #bd526b;
+}
+
+.salary {
+    color: #188050;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.group-heading th {
+    background: #efedff;
+    color: #5049a4;
+    padding: 13px;
+}
+
+.empty-message {
+    text-align: center;
+    padding: 30px;
+    color: #7d849a;
+    font-weight: 700;
+}
+
+
+/* =====================================
+   10. DEPARTMENT ANALYTICS
+===================================== */
+
+.department-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 13px;
+}
+
+.department-card {
+    padding: 17px;
+    border-radius: 12px;
+    border: 1px solid #e9eaf1;
+    transition: 0.2s;
+}
+
+.department-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(45, 50, 90, 0.07);
+}
+
+.department-icon {
+    font-size: 26px;
+    margin-bottom: 10px;
+}
+
+.department-card h3 {
+    font-size: 13px;
+    margin-bottom: 10px;
+    color: #394365;
+}
+
+.department-card p {
+    color: #66718a;
+    font-size: 11px;
+    font-weight: 700;
+    margin-top: 7px;
+    line-height: 1.5;
+}
+
+.card-IT {
+    background: #f3f7ff;
+}
+
+.card-HR {
+    background: #f1fbf4;
+}
+
+.card-Finance {
+    background: #fff9ee;
+}
+
+.card-Marketing {
+    background: #f8f3ff;
+}
+
+.card-Sales {
+    background: #fff4f6;
+}
+
+
+/* =====================================
+   11. FOOTER
+===================================== */
+
+.footer {
+    background: #27366f;
+    color: white;
+    text-align: center;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 25px 0 18px;
+}
+
+.footer strong {
+    font-size: 15px;
+}
+
+.footer p {
+    font-size: 11px;
+    color: #d4daf5;
+    margin-top: 6px;
+}
+
+
+/* =====================================
+   12. RESPONSIVE DESIGN
+===================================== */
+
+@media (max-width: 950px) {
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .department-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+}
+
+@media (max-width: 650px) {
+
+    .nav-inner {
+        flex-direction: column;
+        padding: 12px 0;
+    }
+
+    .hero {
+        padding: 23px;
+    }
+
+    .hero-right {
+        display: none;
+    }
+
+    .filter-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .department-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .panel-content {
+        padding: 15px;
+    }
+
+}
+
+@media (max-width: 430px) {
+
+    .stats-grid,
+    .filter-grid,
+    .salary-grid,
+    .department-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .hero h1 {
+        font-size: 25px;
+    }
+
+    .nav-links {
+        justify-content: center;
+    }
+
+    .nav-links a {
+        padding: 8px;
+        font-size: 11px;
+    }
+
+    .button-row button {
+        width: 100%;
+    }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<!-- =====================================
+     STEP 1: NAVIGATION
+===================================== -->
+
+<nav class="navbar">
+
+    <div class="container nav-inner">
+
+        <div class="brand">
+            <div class="logo">🏢</div>
+            <span>Employee Portal</span>
+        </div>
+
+        <div class="nav-links">
+
+            <a href="#home">🏠 Home</a>
+
+            <a href="#employees">👥 Employees</a>
+
+            <a href="#analytics">📊 Analytics</a>
+
+        </div>
+
+    </div>
+
+</nav>
+
+
+<main class="container">
+
+
+<!-- =====================================
+     STEP 2: HOME SECTION
+===================================== -->
+
+<section class="hero" id="home">
+
+    <div>
+
+        <span class="hero-tag">
+            ✦ EMPLOYEE MANAGEMENT SYSTEM
+        </span>
+
+        <h1>Employee Data Utility</h1>
+
+        <p>
+            Manage employee records, search information,
+            filter departments, sort salaries and analyze
+            employee data from one dashboard.
+        </p>
+
+    </div>
+
+    <div class="hero-right">
+
+        <div class="hero-icon">👨‍💼</div>
+
+        <p>Smart Employee Portal</p>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================
+     STEP 3: SUMMARY CARDS
+===================================== -->
+
+<div class="section-heading">
+
+    <div>
+        <h2>Dashboard Overview</h2>
+        <p>Employee statistics at a glance</p>
+    </div>
+
+</div>
+
+
+<section class="stats-grid">
+
+    <div class="stat-card">
+
+        <div class="stat-icon blue-icon">👥</div>
+
+        <div>
+            <h3>Total Employees</h3>
+
+            <div class="stat-number" id="totalEmployees">0</div>
+        </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <div class="stat-icon green-icon">💰</div>
+
+        <div>
+            <h3>Average Salary</h3>
+
+            <div class="stat-number" id="averageSalary">₹0</div>
+        </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <div class="stat-icon orange-icon">🏆</div>
+
+        <div>
+            <h3>Highest Paid Employee</h3>
+
+            <div class="stat-number highest-number" id="highestEmployee">
+                -
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <div class="stat-icon purple-icon">🏢</div>
+
+        <div>
+            <h3>Total Departments</h3>
+
+            <div class="stat-number" id="totalDepartments">0</div>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================
+     STEP 4: SEARCH AND FILTER
+===================================== -->
+
+<section class="panel">
+
+    <div class="panel-heading">
+
+        <div class="panel-icon">🔍</div>
+
+        <h2>Search & Filter Employees</h2>
+
+    </div>
+
+
+    <div class="panel-content">
+
+        <div class="filter-grid">
+
+
+            <div class="field">
+
+                <label for="searchInput">
+                    🔎 Search Employee
+                </label>
+
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="Search name or ID..."
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label for="department">
+                    🏢 Department
+                </label>
+
+                <select id="department">
+
+                    <option value="">All Departments</option>
+
+                    <option value="IT">💻 IT</option>
+
+                    <option value="HR">👥 HR</option>
+
+                    <option value="Finance">💰 Finance</option>
+
+                    <option value="Marketing">📢 Marketing</option>
+
+                    <option value="Sales">📈 Sales</option>
+
+                </select>
+
+            </div>
+
+
+            <div class="field">
+
+                <label for="sortBy">
+                    ↕️ Sort By
+                </label>
+
+                <select id="sortBy">
+
+                    <option value="">Default Order</option>
+
+                    <option value="nameAsc">Name A - Z</option>
+
+                    <option value="nameDesc">Name Z - A</option>
+
+                    <option value="salaryAsc">Salary Low - High</option>
+
+                    <option value="salaryDesc">Salary High - Low</option>
+
+                </select>
+
+            </div>
+
+
+            <div class="field">
+
+                <label for="groupBy">
+                    🗂️ Group By Department
+                </label>
+
+                <select id="groupBy">
+
+                    <option value="no">No Grouping</option>
+
+                    <option value="yes">Group by Department</option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+
+        <div class="salary-grid">
+
+            <div class="field">
+
+                <label for="minSalary">
+                    💵 Minimum Salary (₹)
+                </label>
+
+                <input
+                    type="number"
+                    id="minSalary"
+                    min="0"
+                    placeholder="Minimum salary"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label for="maxSalary">
+                    💵 Maximum Salary (₹)
+                </label>
+
+                <input
+                    type="number"
+                    id="maxSalary"
+                    min="0"
+                    placeholder="Maximum salary"
+                >
+
+            </div>
+
+        </div>
+
+
+        <div class="button-row">
+
+            <button
+                type="button"
+                class="apply-btn"
+                id="applyBtn"
+            >
+                🔍 Apply Filters
+            </button>
+
+
+            <button
+                type="button"
+                class="reset-btn"
+                id="resetBtn"
+            >
+                ↻ Reset All
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================
+     STEP 5: STATUS MESSAGE
+===================================== -->
+
+<div class="message success" id="message" aria-live="polite">
+    ✓ Showing all employee records.
+</div>
+
+
+<!-- =====================================
+     STEP 6: EMPLOYEE TABLE
+===================================== -->
+
+<section class="panel" id="employees">
+
+    <div class="panel-heading">
+
+        <div class="panel-icon">📋</div>
+
+        <h2>Employee Records</h2>
+
+    </div>
+
+
+    <div class="panel-content">
+
+        <p class="result-count" id="resultCount">
+            Showing 25 Employees
+        </p>
+
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>Employee ID</th>
+                        <th>Employee Name</th>
+                        <th>Department</th>
+                        <th>Salary (₹)</th>
+                    </tr>
+
+                </thead>
+
+                <tbody id="employeeTable"></tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================
+     STEP 7: DEPARTMENT ANALYTICS
+===================================== -->
+
+<section class="panel" id="analytics">
+
+    <div class="panel-heading">
+
+        <div class="panel-icon">📊</div>
+
+        <h2>Department Analytics</h2>
+
+    </div>
+
+
+    <div class="panel-content">
+
+        <div class="department-grid" id="departmentGroups"></div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================
+     STEP 8: FOOTER
+===================================== -->
+
+<footer class="footer">
+
+    <strong>🏢 Employee Data Utility</strong>
+
+    <p>
+        Employee Management • Salary Analysis • Department Management
+    </p>
+
+    <p>
+        Developed using HTML, CSS and JavaScript
+    </p>
+
+</footer>
+
+
+</main>
+
+
+<script>
+
+/* ============================================
+   STEP 1: EMPLOYEE DATA
+============================================ */
+
+// Store 25 employee records in an array of objects.
+
+const employees = [
+
+    { id: 1, name: "Aarav Patel", department: "IT", salary: 45000 },
+    { id: 2, name: "Diya Shah", department: "HR", salary: 32000 },
+    { id: 3, name: "Rohan Mehta", department: "Finance", salary: 50000 },
+    { id: 4, name: "Anaya Desai", department: "Marketing", salary: 35000 },
+    { id: 5, name: "Krish Joshi", department: "Sales", salary: 28000 },
+
+    { id: 6, name: "Mira Trivedi", department: "IT", salary: 60000 },
+    { id: 7, name: "Dev Patel", department: "HR", salary: 30000 },
+    { id: 8, name: "Isha Shah", department: "Finance", salary: 55000 },
+    { id: 9, name: "Yash Mehta", department: "Marketing", salary: 40000 },
+    { id: 10, name: "Kiara Desai", department: "Sales", salary: 33000 },
+
+    { id: 11, name: "Arjun Joshi", department: "IT", salary: 52000 },
+    { id: 12, name: "Nisha Patel", department: "HR", salary: 38000 },
+    { id: 13, name: "Vivaan Shah", department: "Finance", salary: 65000 },
+    { id: 14, name: "Pooja Mehta", department: "Marketing", salary: 42000 },
+    { id: 15, name: "Dhruv Desai", department: "Sales", salary: 36000 },
+
+    { id: 16, name: "Riya Joshi", department: "IT", salary: 70000 },
+    { id: 17, name: "Neel Trivedi", department: "HR", salary: 34000 },
+    { id: 18, name: "Kavya Patel", department: "Finance", salary: 48000 },
+    { id: 19, name: "Om Shah", department: "Marketing", salary: 31000 },
+    { id: 20, name: "Tara Mehta", department: "Sales", salary: 44000 },
+
+    { id: 21, name: "Reyansh Desai", department: "IT", salary: 58000 },
+    { id: 22, name: "Aditi Joshi", department: "HR", salary: 41000 },
+    { id: 23, name: "Parth Patel", department: "Finance", salary: 75000 },
+    { id: 24, name: "Myra Shah", department: "Marketing", salary: 39000 },
+    { id: 25, name: "Kabir Mehta", department: "Sales", salary: 47000 }
+
+];
+
+
+// Select HTML elements.
+
+const searchInput = document.getElementById("searchInput");
+const departmentInput = document.getElementById("department");
+const minSalaryInput = document.getElementById("minSalary");
+const maxSalaryInput = document.getElementById("maxSalary");
+const sortInput = document.getElementById("sortBy");
+const groupInput = document.getElementById("groupBy");
+const tableBody = document.getElementById("employeeTable");
+
+
+// Department list.
+
+const departments = ["IT", "HR", "Finance", "Marketing", "Sales"];
+
+
+// Department icons.
+
+function getDepartmentIcon(department) {
+
+    const icons = {
+        IT: "💻",
+        HR: "👥",
+        Finance: "💰",
+        Marketing: "📢",
+        Sales: "📈"
+    };
+
+    return icons[department] || "🏢";
+
+}
+
+
+/* ============================================
+   STEP 2: SALARY FORMAT
+============================================ */
+
+// Format salary in Indian currency format.
+
+function formatSalary(amount) {
+
+    return "₹" + amount.toLocaleString("en-IN");
+
+}
+
+
+/* ============================================
+   STEP 3: SEARCH, FILTER AND SORT
+============================================ */
+
+function getFilteredEmployees() {
+
+    const searchText = searchInput.value.trim().toLowerCase();
+
+    const department = departmentInput.value;
+
+    const minText = minSalaryInput.value;
+    const maxText = maxSalaryInput.value;
+
+    const sortValue = sortInput.value;
+
+
+    // Convert salary inputs into numbers.
+
+    const minSalary = minText === "" ? null : Number(minText);
+
+    const maxSalary = maxText === "" ? null : Number(maxText);
+
+
+    // Validate salary values.
+
+    if (
+        (minSalary !== null &&
+            (!Number.isFinite(minSalary) || minSalary < 0)) ||
+
+        (maxSalary !== null &&
+            (!Number.isFinite(maxSalary) || maxSalary < 0))
+    ) {
+
+        return {
+            error: "Salary cannot be negative.",
+            list: []
+        };
+
+    }
+
+
+    // Check minimum and maximum salary.
+
+    if (
+        minSalary !== null &&
+        maxSalary !== null &&
+        minSalary > maxSalary
+    ) {
+
+        return {
+            error: "Minimum salary cannot exceed maximum salary.",
+            list: []
+        };
+
+    }
+
+
+    // Filter employee records.
+
+    let filteredEmployees = employees.filter(function(employee) {
+
+        const matchesSearch =
+            employee.name.toLowerCase().includes(searchText) ||
+            String(employee.id).includes(searchText) ||
+            ("emp-" + String(employee.id).padStart(3, "0")).includes(searchText);
+
+        const matchesDepartment =
+            department === "" ||
+            employee.department === department;
+
+        const matchesMinSalary =
+            minSalary === null ||
+            employee.salary >= minSalary;
+
+        const matchesMaxSalary =
+            maxSalary === null ||
+            employee.salary <= maxSalary;
+
+
+        return matchesSearch &&
+            matchesDepartment &&
+            matchesMinSalary &&
+            matchesMaxSalary;
+
+    });
+
+
+    // Copy array before sorting.
+
+    filteredEmployees = [...filteredEmployees];
+
+
+    // Sort employee records.
+
+    switch (sortValue) {
+
+        case "nameAsc":
+
+            filteredEmployees.sort((a, b) =>
+                a.name.localeCompare(b.name)
+            );
+
+            break;
+
+
+        case "nameDesc":
+
+            filteredEmployees.sort((a, b) =>
+                b.name.localeCompare(a.name)
+            );
+
+            break;
+
+
+        case "salaryAsc":
+
+            filteredEmployees.sort((a, b) =>
+                a.salary - b.salary
+            );
+
+            break;
+
+
+        case "salaryDesc":
+
+            filteredEmployees.sort((a, b) =>
+                b.salary - a.salary
+            );
+
+            break;
+
+
+        default:
+
+            filteredEmployees.sort((a, b) =>
+                a.id - b.id
+            );
+
+    }
+
+
+    return {
+        error: null,
+        list: filteredEmployees
+    };
+
+}
+
+
+/* ============================================
+   STEP 4: CREATE EMPLOYEE TABLE ROW
+============================================ */
+
+function addEmployeeRow(employee) {
+
+    const row = document.createElement("tr");
+
+
+    // Employee ID.
+
+    const idCell = document.createElement("td");
+
+    const idBadge = document.createElement("span");
+
+    idBadge.className = "employee-id";
+
+    idBadge.textContent =
+        "EMP-" + String(employee.id).padStart(3, "0");
+
+    idCell.appendChild(idBadge);
+
+
+    // Employee Name.
+
+    const nameCell = document.createElement("td");
+
+    nameCell.className = "employee-name";
+
+    nameCell.textContent = "👤 " + employee.name;
+
+
+    // Department.
+
+    const departmentCell = document.createElement("td");
+
+    const departmentBadge = document.createElement("span");
+
+    departmentBadge.className =
+        "dept-badge dept-" + employee.department;
+
+    departmentBadge.textContent =
+        getDepartmentIcon(employee.department) +
+        " " + employee.department;
+
+    departmentCell.appendChild(departmentBadge);
+
+
+    // Salary.
+
+    const salaryCell = document.createElement("td");
+
+    salaryCell.className = "salary";
+
+    salaryCell.textContent = formatSalary(employee.salary);
+
+
+    // Add all cells to the row.
+
+    row.append(
+        idCell,
+        nameCell,
+        departmentCell,
+        salaryCell
+    );
+
+
+    // Add row to the table.
+
+    tableBody.appendChild(row);
+
+}
+
+
+/* ============================================
+   STEP 5: DISPLAY EMPLOYEE RECORDS
+============================================ */
+
+function displayEmployees(list) {
+
+    tableBody.innerHTML = "";
+
+
+    // Show message when no employees are found.
+
+    if (list.length === 0) {
+
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="4" class="empty-message">
+                    🔍 No employees found. Try another filter.
+                </td>
+            </tr>
+        `;
+
+        return;
+
+    }
+
+
+    // Check department grouping.
+
+    if (groupInput.value === "yes") {
+
+        departments.forEach(function(department) {
+
+            const departmentEmployees = list.filter(function(employee) {
+
+                return employee.department === department;
+
+            });
+
+
+            if (departmentEmployees.length === 0) {
+                return;
+            }
+
+
+            // Create department heading.
+
+            const headingRow = document.createElement("tr");
+
+            headingRow.className = "group-heading";
+
+            const headingCell = document.createElement("th");
+
+            headingCell.colSpan = 4;
+
+            headingCell.textContent =
+                getDepartmentIcon(department) +
+                " " + department +
+                " Department (" +
+                departmentEmployees.length +
+                " Employees)";
+
+            headingRow.appendChild(headingCell);
+
+            tableBody.appendChild(headingRow);
+
+
+            // Add employees under department.
+
+            departmentEmployees.forEach(addEmployeeRow);
+
+        });
+
+    } else {
+
+        list.forEach(addEmployeeRow);
+
+    }
+
+}
+
+
+/* ============================================
+   STEP 6: UPDATE SUMMARY CARDS
+============================================ */
+
+function updateSummary(list) {
+
+    // Total employees.
+
+    document.getElementById("totalEmployees").textContent =
+        list.length;
+
+
+    // Count unique departments.
+
+    const uniqueDepartments = new Set(
+
+        list.map(employee => employee.department)
+
+    );
+
+    document.getElementById("totalDepartments").textContent =
+        uniqueDepartments.size;
+
+
+    // Empty result handling.
+
+    if (list.length === 0) {
+
+        document.getElementById("averageSalary").textContent = "₹0";
+
+        document.getElementById("highestEmployee").textContent = "None";
+
+        return;
+
+    }
+
+
+    // Calculate total salary.
+
+    const totalSalary = list.reduce(
+
+        (total, employee) => total + employee.salary,
+
+        0
+
+    );
+
+
+    // Calculate average salary.
+
+    const averageSalary = Math.round(totalSalary / list.length);
+
+
+    // Find highest-paid employee.
+
+    const highestEmployee = list.reduce(
+
+        (highest, employee) => {
+
+            return employee.salary > highest.salary
+                ? employee
+                : highest;
+
+        }
+
+    );
+
+
+    // Display average salary.
+
+    document.getElementById("averageSalary").textContent =
+        formatSalary(averageSalary);
+
+
+    // Display highest-paid employee.
+
+    document.getElementById("highestEmployee").textContent =
+        highestEmployee.name + " - " +
+        formatSalary(highestEmployee.salary);
+
+}
+
+
+/* ============================================
+   STEP 7: DEPARTMENT ANALYTICS
+============================================ */
+
+function renderDepartmentGroups(list) {
+
+    const container = document.getElementById("departmentGroups");
+
+    container.innerHTML = "";
+
+
+    departments.forEach(function(department) {
+
+
+        // Get department employees.
+
+        const members = list.filter(function(employee) {
+
+            return employee.department === department;
+
+        });
+
+
+        if (members.length === 0) {
+            return;
+        }
+
+
+        // Calculate total department salary.
+
+        const totalSalary = members.reduce(
+
+            (total, employee) => total + employee.salary,
+
+            0
+
+        );
+
+
+        // Calculate department average.
+
+        const averageSalary = Math.round(
+            totalSalary / members.length
+        );
+
+
+        // Create department card.
+
+        const card = document.createElement("div");
+
+        card.className = "department-card card-" + department;
+
+
+        const icon = document.createElement("div");
+
+        icon.className = "department-icon";
+
+        icon.textContent = getDepartmentIcon(department);
+
+
+        const title = document.createElement("h3");
+
+        title.textContent = department + " Department";
+
+
+        const count = document.createElement("p");
+
+        count.textContent = "👥 Employees: " + members.length;
+
+
+        const average = document.createElement("p");
+
+        average.textContent =
+            "💰 Average: " + formatSalary(averageSalary);
+
+
+        card.append(icon, title, count, average);
+
+        container.appendChild(card);
+
+    });
+
+
+    if (container.children.length === 0) {
+
+        container.textContent = "No department records found.";
+
+    }
+
+}
+
+
+/* ============================================
+   STEP 8: UPDATE DASHBOARD
+============================================ */
+
+function updateDashboard() {
+
+    const result = getFilteredEmployees();
+
+
+    // Handle validation errors.
+
+    if (result.error) {
+
+        const message = document.getElementById("message");
+
+        message.className = "message warning";
+
+        message.textContent = "⚠️ " + result.error;
+
+        displayEmployees([]);
+
+        updateSummary([]);
+
+        renderDepartmentGroups([]);
+
+        document.getElementById("resultCount").textContent =
+            "No valid results";
+
+        return;
+
+    }
+
+
+    const list = result.list;
+
+
+    // Update table and analytics.
+
+    displayEmployees(list);
+
+    updateSummary(list);
+
+    renderDepartmentGroups(list);
+
+
+    // Update result count.
+
+    document.getElementById("resultCount").textContent =
+        "Showing " + list.length +
+        " of " + employees.length + " Employees";
+
+
+    // Update status message.
+
+    const message = document.getElementById("message");
+
+    message.className =
+        list.length === 0
+            ? "message warning"
+            : "message success";
+
+    message.textContent =
+        list.length === 0
+            ? "🔍 No matching employees found."
+            : "✓ Showing " + list.length + " employee record(s).";
+
+}
+
+
+/* ============================================
+   STEP 9: EVENT LISTENERS
+============================================ */
+
+// Apply filters button.
+
+document.getElementById("applyBtn").addEventListener(
+    "click",
+    updateDashboard
+);
+
+
+// Live search.
+
+searchInput.addEventListener("input", updateDashboard);
+
+
+// Department filter.
+
+departmentInput.addEventListener("change", updateDashboard);
+
+
+// Sorting.
+
+sortInput.addEventListener("change", updateDashboard);
+
+
+// Group by department.
+
+groupInput.addEventListener("change", updateDashboard);
+
+
+// Salary filters.
+
+minSalaryInput.addEventListener("input", updateDashboard);
+
+maxSalaryInput.addEventListener("input", updateDashboard);
+
+
+/* ============================================
+   STEP 10: RESET ALL
+============================================ */
+
+document.getElementById("resetBtn").addEventListener(
+    "click",
+    function() {
+
+        searchInput.value = "";
+
+        departmentInput.value = "";
+
+        minSalaryInput.value = "";
+
+        maxSalaryInput.value = "";
+
+        sortInput.value = "";
+
+        groupInput.value = "no";
+
+
+        // Restore all employee records.
+
+        updateDashboard();
+
+
+        const button = document.getElementById("resetBtn");
+
+        button.textContent = "✓ Reset Done!";
+
+
+        window.setTimeout(function() {
+
+            button.textContent = "↻ Reset All";
+
+        }, 1200);
+
+    }
+);
+
+
+/* ============================================
+   STEP 11: INITIALIZE DASHBOARD
+============================================ */
+
+// Show all 25 employee records on page load.
+
+updateDashboard();
+
+</script>
+
+</body>
+</html>

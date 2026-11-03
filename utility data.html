@@ -1,0 +1,934 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Employee Data Utility</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: linear-gradient(135deg, #edf2ff, #f8f7ff, #e8f4ff);
+    color: #1e2b59;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1450px;
+    margin: auto;
+}
+
+/* Header */
+.header {
+    background: linear-gradient(120deg, #642fe5, #2355d9, #2696f5);
+    color: white;
+    padding: 28px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 22px;
+    box-shadow: 0 8px 25px #bbc8f0;
+}
+
+.header-icon {
+    font-size: 55px;
+    background: #ffffff25;
+    padding: 15px;
+    border-radius: 17px;
+}
+
+.header h1 {
+    font-size: clamp(25px, 3vw, 38px);
+    margin-bottom: 8px;
+}
+
+.header p {
+    line-height: 1.6;
+}
+
+/* Summary */
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+    margin-bottom: 22px;
+}
+
+.stat-card {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    border: 1px solid #dce4ff;
+    box-shadow: 0 5px 16px #dce3f5;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+    transition: .2s;
+}
+
+.stat-card:hover {
+    transform: translateY(-4px);
+}
+
+.stat-icon {
+    font-size: 38px;
+}
+
+.stat-card h3 {
+    color: #64719a;
+    font-size: 13px;
+    margin-bottom: 9px;
+}
+
+.stat-number {
+    color: #2455ce;
+    font-size: clamp(19px, 2vw, 27px);
+    font-weight: 800;
+    overflow-wrap: anywhere;
+}
+
+.highest-number {
+    font-size: 17px;
+}
+
+/* Panels */
+.panel {
+    background: white;
+    border: 1px solid #dce4ff;
+    border-radius: 17px;
+    overflow: hidden;
+    margin-bottom: 22px;
+    box-shadow: 0 5px 17px #dce3f5;
+}
+
+.panel-title {
+    background: linear-gradient(100deg, #214bc1, #7139db);
+    color: white;
+    padding: 17px 21px;
+    font-size: 20px;
+}
+
+.panel-content {
+    padding: 22px;
+}
+
+/* Search and filters */
+.filters {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 17px;
+}
+
+.field label {
+    display: block;
+    font-size: 13px;
+    font-weight: 750;
+    margin-bottom: 8px;
+    color: #293b78;
+}
+
+input, select {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid #cbd6f1;
+    border-radius: 10px;
+    background: #fbfcff;
+    color: #1e2b59;
+    font-size: 14px;
+    outline: none;
+}
+
+input:focus, select:focus {
+    border-color: #4779f5;
+    box-shadow: 0 0 0 3px #e2eaff;
+}
+
+.salary-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 17px;
+}
+
+.button-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+button {
+    border: none;
+    padding: 13px 19px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    transition: .2s;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.08);
+}
+
+.apply-btn {
+    background: linear-gradient(100deg, #2865ed, #7040df);
+    color: white;
+}
+
+.reset-btn {
+    background: linear-gradient(100deg, #ff526c, #d9234e);
+    color: white;
+}
+
+/* Message */
+.message {
+    background: #e9f1ff;
+    color: #244db1;
+    padding: 14px 17px;
+    border-radius: 10px;
+    font-weight: 650;
+    margin-bottom: 20px;
+}
+
+/* Employee table */
+.table-wrap {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    min-width: 720px;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 14px;
+    text-align: left;
+    border-bottom: 1px solid #e3e9f8;
+    font-size: 14px;
+}
+
+th {
+    background: #e8edff;
+    color: #214298;
+    white-space: nowrap;
+}
+
+tbody tr:nth-child(even) {
+    background: #f8faff;
+}
+
+tbody tr:hover {
+    background: #eaf1ff;
+}
+
+.salary {
+    color: #078051;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.id-badge {
+    background: #e7edff;
+    color: #3155bd;
+    padding: 5px 9px;
+    border-radius: 7px;
+    font-weight: bold;
+}
+
+.department-badge {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.dept-IT { background: #dceaff; color: #1555b9; }
+.dept-HR { background: #d9f8e6; color: #147746; }
+.dept-Finance { background: #fff0ce; color: #955800; }
+.dept-Marketing { background: #eee1ff; color: #7134bd; }
+.dept-Sales { background: #ffe1e8; color: #b72b50; }
+
+.group-heading th {
+    background: linear-gradient(90deg, #dce8ff, #eee4ff);
+    color: #3c329d;
+    padding: 15px;
+}
+
+.empty {
+    text-align: center;
+    padding: 30px;
+    color: #6c7898;
+}
+
+/* Department cards */
+.groups {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 14px;
+    padding: 20px;
+}
+
+.group-card {
+    border-radius: 15px;
+    padding: 18px;
+    border: 1px solid #d7e0f6;
+    transition: .2s;
+}
+
+.group-card:hover {
+    transform: translateY(-4px);
+}
+
+.group-icon {
+    font-size: 35px;
+    margin-bottom: 10px;
+}
+
+.group-card h3 {
+    margin-bottom: 10px;
+    font-size: 17px;
+}
+
+.group-card p {
+    margin-top: 8px;
+    font-size: 13px;
+    line-height: 1.5;
+    font-weight: 600;
+}
+
+.it-card { background: #edf5ff; }
+.hr-card { background: #effff4; }
+.finance-card { background: #fff8e8; }
+.marketing-card { background: #f6efff; }
+.sales-card { background: #fff0f4; }
+
+.footer {
+    background: linear-gradient(100deg, #642fe5, #2355d9, #2696f5);
+    color: white;
+    text-align: center;
+    padding: 18px;
+    border-radius: 13px;
+    font-weight: 700;
+}
+
+@media (max-width: 1050px) {
+    .stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .groups {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 700px) {
+    body { padding: 10px; }
+
+    .header {
+        padding: 18px;
+        gap: 12px;
+    }
+
+    .header-icon { font-size: 34px; }
+
+    .filters {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .groups {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .panel-content { padding: 14px; }
+}
+
+@media (max-width: 450px) {
+    .stats, .filters, .groups, .salary-row {
+        grid-template-columns: 1fr;
+    }
+
+    .header h1 { font-size: 23px; }
+    .header p { font-size: 12px; }
+    .panel-title { font-size: 17px; }
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+    <!-- MAIN HEADER -->
+    <header class="header">
+        <div class="header-icon">👥</div>
+        <div>
+            <h1>Employee Data Utility</h1>
+            <p>💼 Manage, search, filter, sort and analyze 25 employee records</p>
+        </div>
+    </header>
+
+    <!-- SUMMARY CARDS -->
+    <section class="stats">
+        <div class="stat-card">
+            <div class="stat-icon">👥</div>
+            <div>
+                <h3>📋 Total Employees</h3>
+                <div class="stat-number" id="totalEmployees">0</div>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">💰</div>
+            <div>
+                <h3>📊 Average Salary</h3>
+                <div class="stat-number" id="averageSalary">₹0</div>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">🏆</div>
+            <div>
+                <h3>⭐ Highest Paid Employee</h3>
+                <div class="stat-number highest-number" id="highestEmployee">-</div>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">🏢</div>
+            <div>
+                <h3>🗂️ Departments</h3>
+                <div class="stat-number" id="totalDepartments">5</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SEARCH AND FILTER PANEL -->
+    <section class="panel">
+        <h2 class="panel-title">🔍 Search, Filter & Sort Employees</h2>
+
+        <div class="panel-content">
+            <div class="filters">
+
+                <div class="field">
+                    <label for="searchName">🔎 Search by Employee Name</label>
+                    <input type="text" id="searchName"
+                           placeholder="Enter employee name...">
+                </div>
+
+                <div class="field">
+                    <label for="searchId">🆔 Search by Employee ID</label>
+                    <input type="number" id="searchId"
+                           min="1" placeholder="Enter employee ID...">
+                </div>
+
+                <div class="field">
+                    <label for="departmentFilter">🏢 Filter by Department</label>
+                    <select id="departmentFilter">
+                        <option value="All">All Departments</option>
+                        <option value="IT">💻 IT</option>
+                        <option value="HR">👥 HR</option>
+                        <option value="Finance">💰 Finance</option>
+                        <option value="Marketing">📢 Marketing</option>
+                        <option value="Sales">📈 Sales</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label for="sortBy">↕️ Sort By</label>
+                    <select id="sortBy">
+                        <option value="idAsc">🆔 Employee ID</option>
+                        <option value="nameAsc">🔤 Name A–Z</option>
+                        <option value="nameDesc">🔤 Name Z–A</option>
+                        <option value="salaryAsc">💸 Salary Low–High</option>
+                        <option value="salaryDesc">💰 Salary High–Low</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label for="groupBy">🗂️ Group By Department</label>
+                    <select id="groupBy">
+                        <option value="no">No Grouping</option>
+                        <option value="yes">Group by Department</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="salary-row">
+                <div class="field">
+                    <label for="minSalary">💵 Minimum Salary (₹)</label>
+                    <input type="number" id="minSalary"
+                           min="0" placeholder="Minimum salary">
+                </div>
+
+                <div class="field">
+                    <label for="maxSalary">💵 Maximum Salary (₹)</label>
+                    <input type="number" id="maxSalary"
+                           min="0" placeholder="Maximum salary">
+                </div>
+            </div>
+
+            <div class="button-row">
+                <button type="button" class="apply-btn" id="applyBtn">
+                    🔎 Apply Filters
+                </button>
+
+                <button type="button" class="reset-btn" id="resetBtn">
+                    🔄 Reset All
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <div class="message" id="message" aria-live="polite">
+        ✨ Showing all employee records.
+    </div>
+
+    <!-- EMPLOYEE TABLE -->
+    <section class="panel">
+        <h2 class="panel-title">📋 Employee Records</h2>
+
+        <div class="panel-content">
+            <p id="resultCount" style="margin-bottom:15px;font-weight:bold">
+                Showing 25 employees
+            </p>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>🆔 Employee ID</th>
+                            <th>👤 Employee Name</th>
+                            <th>🏢 Department</th>
+                            <th>💰 Salary (₹)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="employeeTable"></tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- DEPARTMENT GROUPS -->
+    <section class="panel" id="groupPanel">
+        <h2 class="panel-title">🗂️ Department Summary</h2>
+        <div class="groups" id="departmentGroups"></div>
+    </section>
+
+    <footer class="footer">
+        💼 Employee Data Utility | HTML • CSS • JavaScript
+    </footer>
+</div>
+
+<script>
+// =============================================
+// STEP 1: 25 SAMPLE EMPLOYEE RECORDS
+// =============================================
+
+const employees = [
+    {id:1, name:"Aarav Patel", department:"IT", salary:45000},
+    {id:2, name:"Diya Shah", department:"HR", salary:32000},
+    {id:3, name:"Rohan Mehta", department:"Finance", salary:50000},
+    {id:4, name:"Anaya Desai", department:"Marketing", salary:35000},
+    {id:5, name:"Krish Joshi", department:"Sales", salary:28000},
+    {id:6, name:"Mira Trivedi", department:"IT", salary:60000},
+    {id:7, name:"Dev Patel", department:"HR", salary:30000},
+    {id:8, name:"Isha Shah", department:"Finance", salary:55000},
+    {id:9, name:"Yash Mehta", department:"Marketing", salary:40000},
+    {id:10, name:"Kiara Desai", department:"Sales", salary:33000},
+    {id:11, name:"Arjun Joshi", department:"IT", salary:52000},
+    {id:12, name:"Nisha Patel", department:"HR", salary:38000},
+    {id:13, name:"Vivaan Shah", department:"Finance", salary:65000},
+    {id:14, name:"Pooja Mehta", department:"Marketing", salary:42000},
+    {id:15, name:"Dhruv Desai", department:"Sales", salary:36000},
+    {id:16, name:"Riya Joshi", department:"IT", salary:70000},
+    {id:17, name:"Neel Trivedi", department:"HR", salary:34000},
+    {id:18, name:"Kavya Patel", department:"Finance", salary:48000},
+    {id:19, name:"Om Shah", department:"Marketing", salary:31000},
+    {id:20, name:"Tara Mehta", department:"Sales", salary:44000},
+    {id:21, name:"Reyansh Desai", department:"IT", salary:58000},
+    {id:22, name:"Aditi Joshi", department:"HR", salary:41000},
+    {id:23, name:"Parth Patel", department:"Finance", salary:75000},
+    {id:24, name:"Myra Shah", department:"Marketing", salary:39000},
+    {id:25, name:"Kabir Mehta", department:"Sales", salary:47000}
+];
+
+// Select HTML elements
+const searchName = document.getElementById("searchName");
+const searchId = document.getElementById("searchId");
+const departmentFilter = document.getElementById("departmentFilter");
+const minSalary = document.getElementById("minSalary");
+const maxSalary = document.getElementById("maxSalary");
+const sortBy = document.getElementById("sortBy");
+const groupBy = document.getElementById("groupBy");
+const employeeTable = document.getElementById("employeeTable");
+
+// Format salary in Indian currency format
+function formatSalary(amount) {
+    return "₹" + amount.toLocaleString("en-IN");
+}
+
+// Department icons
+function getDepartmentIcon(department) {
+    const icons = {
+        IT: "💻",
+        HR: "👥",
+        Finance: "💰",
+        Marketing: "📢",
+        Sales: "📈"
+    };
+
+    return icons[department] || "🏢";
+}
+
+// =============================================
+// STEP 2: FILTER EMPLOYEES
+// =============================================
+
+function getFilteredEmployees() {
+    const nameText = searchName.value.trim().toLowerCase();
+    const idText = searchId.value.trim();
+    const department = departmentFilter.value;
+
+    const minText = minSalary.value;
+    const maxText = maxSalary.value;
+
+    const min = minText === "" ? null : Number(minText);
+    const max = maxText === "" ? null : Number(maxText);
+
+    // Validate salary values
+    if (
+        (min !== null && (!Number.isFinite(min) || min < 0)) ||
+        (max !== null && (!Number.isFinite(max) || max < 0))
+    ) {
+        return {error:"Salary cannot be negative.", list:[]};
+    }
+
+    if (min !== null && max !== null && min > max) {
+        return {
+            error:"Minimum salary cannot be greater than maximum salary.",
+            list:[]
+        };
+    }
+
+    let list = employees.filter(function(employee) {
+        const matchesName =
+            employee.name.toLowerCase().includes(nameText);
+
+        const matchesId =
+            idText === "" || String(employee.id).includes(idText);
+
+        const matchesDepartment =
+            department === "All" ||
+            employee.department === department;
+
+        const matchesMin =
+            min === null || employee.salary >= min;
+
+        const matchesMax =
+            max === null || employee.salary <= max;
+
+        return matchesName && matchesId &&
+               matchesDepartment && matchesMin && matchesMax;
+    });
+
+    // =============================================
+    // STEP 3: SORT BY NAME OR SALARY
+    // =============================================
+
+    list = [...list];
+
+    switch (sortBy.value) {
+        case "nameAsc":
+            list.sort((a, b) => a.name.localeCompare(b.name));
+            break;
+
+        case "nameDesc":
+            list.sort((a, b) => b.name.localeCompare(a.name));
+            break;
+
+        case "salaryAsc":
+            list.sort((a, b) => a.salary - b.salary);
+            break;
+
+        case "salaryDesc":
+            list.sort((a, b) => b.salary - a.salary);
+            break;
+
+        default:
+            list.sort((a, b) => a.id - b.id);
+    }
+
+    return {error:null, list:list};
+}
+
+// =============================================
+// STEP 4: DISPLAY EMPLOYEE TABLE
+// =============================================
+
+function displayEmployees(list) {
+    employeeTable.innerHTML = "";
+
+    if (list.length === 0) {
+        employeeTable.innerHTML = `
+            <tr>
+                <td colspan="4" class="empty">
+                    🔍 No employees found. Try another search or filter.
+                </td>
+            </tr>`;
+        return;
+    }
+
+    // Group records inside the table if requested
+    if (groupBy.value === "yes") {
+        const departments = ["IT", "HR", "Finance", "Marketing", "Sales"];
+
+        departments.forEach(function(department) {
+            const members = list.filter(
+                employee => employee.department === department
+            );
+
+            if (members.length === 0) return;
+
+            const headingRow = document.createElement("tr");
+            headingRow.className = "group-heading";
+
+            const headingCell = document.createElement("th");
+            headingCell.colSpan = 4;
+            headingCell.textContent =
+                getDepartmentIcon(department) + " " + department +
+                " Department — " + members.length + " employees";
+
+            headingRow.appendChild(headingCell);
+            employeeTable.appendChild(headingRow);
+
+            members.forEach(addEmployeeRow);
+        });
+    } else {
+        list.forEach(addEmployeeRow);
+    }
+}
+
+function addEmployeeRow(employee) {
+    const row = document.createElement("tr");
+
+    const idCell = document.createElement("td");
+    const idBadge = document.createElement("span");
+    idBadge.className = "id-badge";
+    idBadge.textContent = "EMP-" + String(employee.id).padStart(3, "0");
+    idCell.appendChild(idBadge);
+
+    const nameCell = document.createElement("td");
+    nameCell.textContent = "👤 " + employee.name;
+
+    const departmentCell = document.createElement("td");
+    const departmentBadge = document.createElement("span");
+    departmentBadge.className =
+        "department-badge dept-" + employee.department;
+    departmentBadge.textContent =
+        getDepartmentIcon(employee.department) + " " +
+        employee.department;
+    departmentCell.appendChild(departmentBadge);
+
+    const salaryCell = document.createElement("td");
+    salaryCell.className = "salary";
+    salaryCell.textContent = "💰 " + formatSalary(employee.salary);
+
+    row.append(idCell, nameCell, departmentCell, salaryCell);
+    employeeTable.appendChild(row);
+}
+
+// =============================================
+// STEP 5: AVERAGE SALARY AND HIGHEST PAID
+// =============================================
+
+function updateSummary(list) {
+    document.getElementById("totalEmployees").textContent = list.length;
+
+    const departments = new Set(
+        list.map(employee => employee.department)
+    );
+
+    document.getElementById("totalDepartments").textContent =
+        departments.size;
+
+    if (list.length === 0) {
+        document.getElementById("averageSalary").textContent = "₹0";
+        document.getElementById("highestEmployee").textContent = "None";
+        return;
+    }
+
+    const totalSalary = list.reduce(
+        (sum, employee) => sum + employee.salary, 0
+    );
+
+    const average = Math.round(totalSalary / list.length);
+
+    const highest = list.reduce(
+        (best, employee) =>
+            employee.salary > best.salary ? employee : best
+    );
+
+    document.getElementById("averageSalary").textContent =
+        formatSalary(average);
+
+    document.getElementById("highestEmployee").textContent =
+        highest.name + " (" + formatSalary(highest.salary) + ")";
+}
+
+// =============================================
+// STEP 6: GROUP BY DEPARTMENT
+// =============================================
+
+function renderDepartmentGroups(list) {
+    const container = document.getElementById("departmentGroups");
+    container.innerHTML = "";
+
+    const departmentStyles = {
+        IT: "it-card",
+        HR: "hr-card",
+        Finance: "finance-card",
+        Marketing: "marketing-card",
+        Sales: "sales-card"
+    };
+
+    const departments = ["IT", "HR", "Finance", "Marketing", "Sales"];
+
+    departments.forEach(function(department) {
+        const members = list.filter(
+            employee => employee.department === department
+        );
+
+        if (members.length === 0) return;
+
+        const totalSalary = members.reduce(
+            (sum, employee) => sum + employee.salary, 0
+        );
+
+        const average = Math.round(totalSalary / members.length);
+
+        const card = document.createElement("div");
+        card.className =
+            "group-card " + departmentStyles[department];
+
+        const icon = document.createElement("div");
+        icon.className = "group-icon";
+        icon.textContent = getDepartmentIcon(department);
+
+        const title = document.createElement("h3");
+        title.textContent = department + " Department";
+
+        const count = document.createElement("p");
+        count.textContent = "👥 Employees: " + members.length;
+
+        const avg = document.createElement("p");
+        avg.textContent = "💰 Average Salary: " + formatSalary(average);
+
+        card.append(icon, title, count, avg);
+        container.appendChild(card);
+    });
+
+    if (container.children.length === 0) {
+        container.innerHTML =
+            '<p class="empty">No department records found.</p>';
+    }
+}
+
+// =============================================
+// STEP 7: UPDATE DASHBOARD
+// =============================================
+
+function updateDashboard() {
+    const result = getFilteredEmployees();
+
+    if (result.error) {
+        document.getElementById("message").textContent =
+            "⚠️ " + result.error;
+        return;
+    }
+
+    const list = result.list;
+
+    displayEmployees(list);
+    updateSummary(list);
+    renderDepartmentGroups(list);
+
+    document.getElementById("resultCount").textContent =
+        "📋 Showing " + list.length + " of " +
+        employees.length + " employees";
+
+    document.getElementById("message").textContent =
+        list.length === 0
+        ? "🔍 No matching employees. Please change your filters."
+        : "✅ Showing " + list.length + " employee record(s).";
+}
+
+// =============================================
+// STEP 8: APPLY FILTERS
+// =============================================
+
+document.getElementById("applyBtn").addEventListener(
+    "click", updateDashboard
+);
+
+// Search updates while typing
+searchName.addEventListener("input", updateDashboard);
+searchId.addEventListener("input", updateDashboard);
+
+// Dropdown filters
+departmentFilter.addEventListener("change", updateDashboard);
+sortBy.addEventListener("change", updateDashboard);
+
+// =============================================
+// STEP 9: GROUP BY OPTION
+// =============================================
+
+groupBy.addEventListener("change", function() {
+    updateDashboard();
+});
+
+// =============================================
+// STEP 10: RESET ALL
+// =============================================
+
+document.getElementById("resetBtn").addEventListener("click", function() {
+    searchName.value = "";
+    searchId.value = "";
+    departmentFilter.value = "All";
+    minSalary.value = "";
+    maxSalary.value = "";
+    sortBy.value = "idAsc";
+    groupBy.value = "no";
+
+    updateDashboard();
+
+    const button = document.getElementById("resetBtn");
+    button.textContent = "✅ Reset Done!";
+
+    window.setTimeout(function() {
+        button.textContent = "🔄 Reset All";
+    }, 1200);
+});
+
+// =============================================
+// INITIALIZE THE APP
+// =============================================
+
+updateDashboard();
+
+</script>
+</body>
+</html>

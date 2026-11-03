@@ -1,0 +1,12 @@
+1. Global Scope (ગ્લોબલ સ્કોપ)
+અર્થ: જે variable ને function ની બહાર બનાવવામાં આવે અને જેને program ના યોગ્ય ભાગોમાં access કરી શકાય, તેને Global Variable કહેવાય છે.
+
+
+
+2. Local Scope (લોકલ સ્કોપ)
+અર્થ: જે variable function ની અંદર બનાવવામાં આવે અને ફક્ત તે function ની અંદર જ access કરી શકાય, તેને Local Variable કહેવાય છે.
+
+
+
+3. Block Scope (બ્લોક સ્કોપ)
+અર્થ: { } ની અંદર let અથવા const થી બનાવેલો variable ફક્ત તે block ની અંદર જ access કરી શકાય છે.
